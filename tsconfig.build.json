@@ -1,0 +1,15 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "module": "esnext",
+        "target": "es5",
+        "declaration": true,
+        "isolatedModules": false,
+        "noEmit": false,
+        "emitDeclarationOnly": false,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["src/**/*.tsx", "src/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+}
