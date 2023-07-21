@@ -1,6 +1,6 @@
 # React Stopwatch
 
-React Stopwatch is a simple, yet powerful stopwatch component for your React applications. It provides an easy-to-use API and has a small bundle size.
+React Stopwatch is a simple stopwatch component for your React applications
 
 ## Installation
 
