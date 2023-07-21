@@ -29,4 +29,4 @@ export default App;
 
 ## Demo
 
-[Check out a live demo of React Stopwatch](react-stopwatch.com)
+[Check out a live demo of React Stopwatch](https://react-stopwatch.com/)
