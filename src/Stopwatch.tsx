@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
     Button,
     Box,
@@ -27,18 +27,7 @@ const Stopwatch: React.FC = () => {
     const lapTimeRef = useRef<number>();
     const timerDisplayRef = useRef<HTMLHeadingElement>(null);
 
-    useEffect(() => {
-        if (isRunning) {
-            startTimeRef.current = performance.now();
-            lapTimeRef.current = performance.now();
-            timerRef.current = requestAnimationFrame(update);
-        } else {
-            cancelAnimationFrame(timerRef.current ?? 0);
-        }
-        return () => cancelAnimationFrame(timerRef.current ?? 0);
-    }, [isRunning]);
-
-    const update = (timestamp: number) => {
+    const update = useCallback((timestamp: number) => {
         const elapsed = Math.floor(
             (timestamp - (startTimeRef.current ?? 0)) / 1000
         );
@@ -48,7 +37,7 @@ const Stopwatch: React.FC = () => {
         }
         timerRef.current = requestAnimationFrame(update);
         document.title = formatTime(elapsed, ms);
-    };
+    }, []);
 
     const start = () => setIsRunning(true);
     const stop = () => setIsRunning(false);
@@ -65,15 +54,25 @@ const Stopwatch: React.FC = () => {
         const lapSeconds = Math.floor(
             (lapTime - (lapTimeRef.current ?? 0)) / 1000
         );
-        const ms = Math.floor((lapTime - (lapTimeRef.current ?? 0)) % 1000);
         lapTimeRef.current = lapTime;
         setLaps([...laps, lapSeconds]);
     };
 
+    useEffect(() => {
+        if (isRunning) {
+            startTimeRef.current = performance.now();
+            lapTimeRef.current = performance.now();
+            timerRef.current = requestAnimationFrame(update);
+        } else {
+            cancelAnimationFrame(timerRef.current ?? 0);
+        }
+        return () => cancelAnimationFrame(timerRef.current ?? 0);
+    }, [isRunning, update]);
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Typography variant="h2" ref={timerDisplayRef}>
-                {formatTime(0)}
+                {formatTime(0, 0)}
             </Typography>
             <Box sx={{ display: "flex", gap: 2 }}>
                 <Button variant="contained" onClick={start}>
@@ -94,7 +93,7 @@ const Stopwatch: React.FC = () => {
                     <ListItem key={i}>
                         <ListItemText
                             primary={`Lap ${i + 1}`}
-                            secondary={formatTime(lap)}
+                            secondary={formatTime(lap, 0)}
                         />{" "}
                     </ListItem>
                 ))}
